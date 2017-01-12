@@ -3,6 +3,7 @@ var card_data_example = [
         "count": 1,
         "color": "maroon",
         "title": "Burning Hands",
+        "title_value": 30;
         "icon": "white-book-1",
         "icon_back": "robe",
         "contents": [

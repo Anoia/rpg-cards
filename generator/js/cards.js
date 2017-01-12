@@ -29,6 +29,7 @@ function card_default_data() {
 
 function card_init(card) {
     card.title = card.title || "";
+    card.title_value = card.title_value || "";
     card.contents = card.contents || [];
     card.tags = card.tags || [];
 }
@@ -85,7 +86,17 @@ function card_data_split_params(value) {
 function card_element_title(card_data, options) {
     var title = card_data.title || "";
     var title_size = card_data.title_size || options.default_title_size || 'normal';
-    return '<div class="card-title card-title-' + title_size + '">' + title + '</div>';
+    var result = '<div class="card-title card-title-' + title_size + '">'
+
+    result += '<div style="display:inline">' + title + '</div>'
+    if(card_data.title_value)
+    {
+      result += '<div style="display:inline; float:right; margin-right:8mm">' + card_data.title_value + '</div>'
+    }
+
+    result += '</div>'
+    return result;
+  //  return '<div class="card-title card-title-' + title_size + '">' + title + '</div>';
 }
 
 function card_element_icon(card_data, options) {
@@ -152,10 +163,10 @@ function card_element_property(params, card_data, options) {
     result += '   <p class="card-p card-property-text">' + params[1] + '</p>';
 	if (params[2])
 	{
-		result += '   <div style="float:right">';
+//		result += '   <div style="float:right">';
 		result += '       <h4 class="card-property-name">' + params[2] + '</h4>';
 		result += '       <p class="card-p card-property-text">' + params[3] + '</p>';
-		result += '   </div>';
+	//	result += '   </div>';
 	}
     result += '</div>';
     return result;
@@ -176,6 +187,34 @@ function card_element_text(params, card_data, options) {
     result += '   <p class="card-p card-description-text">' + params[0] + '</p>';
     result += '</div>';
     return result;
+}
+
+function card_element_sotdlstats(params, card_data, options){
+  var stats = [10, 10, 10, 10];
+  for (var i = 0; i < 4; ++i) {
+      var stat = parseInt(params[i], 10) || 0;
+      var mod = stat - 10;
+      if (mod >= 0) {
+          mod = "+" + mod;
+      } else {
+          mod = "" + mod;
+      }
+      stats[i] = stat + "&nbsp;(" + mod + ")";
+  }
+
+  result = "";
+  result += '<div class="card-element card-property-line">';
+  result += '   <h4 class="card-property-name">Strength</h4>';
+  result += '   <p class="card-p card-property-text">' + stats[0] + '</p>';
+  result += '   <h4 class="card-property-name">Agility</h4>';
+  result += '   <p class="card-p card-property-text">' + stats[1] + '</p>';
+  result += '   <h4 class="card-property-name">Intellect</h4>';
+  result += '   <p class="card-p card-property-text">' + stats[2] + '</p>';
+  result += '   <h4 class="card-property-name">Will</h4>';
+  result += '   <p class="card-p card-property-text">' + stats[3] + '</p>';
+  result += '</div>';
+
+  return result;
 }
 
 function card_element_dndstats(params, card_data, options) {
@@ -250,6 +289,7 @@ var card_element_generators = {
     boxes: card_element_boxes,
     description: card_element_description,
     dndstats: card_element_dndstats,
+    sotdlstats: card_element_sotdlstats,
     text: card_element_text,
     bullet: card_element_bullet,
     fill: card_element_fill,
@@ -319,7 +359,7 @@ function card_generate_back(data, options) {
 	{
 		background_style = 'style = "background-image: url(&quot;' + url + '&quot;); background-size: contain; background-position: center; background-repeat: no-repeat;"'
 	}
-	else 
+	else
 	{
 		background_style = card_generate_color_gradient_style(color, options);
     }
